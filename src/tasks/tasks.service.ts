@@ -3,13 +3,30 @@ import { ITask, TaskStatus } from './tasks.interfaces';
 import { v4 as uuidv4} from 'uuid';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
+import { FilterTaskDTO } from './dto/filter-task.dto';
 
 @Injectable()
 export class TasksService {
    private tasks: ITask[]  = [];
 
-   public getAllTasks(): ITask[] {
+   public getTasks(): ITask[] {
       return this.tasks;
+   }
+
+   public getFilteredTasks(filterTaskDTO: FilterTaskDTO): ITask[] {
+      const { status, search } = filterTaskDTO;
+
+      let tasks = this.getTasks();
+
+      if (status) {
+         tasks = tasks.filter((task: ITask) => task.status === status);
+      }
+
+      if (search) {
+         tasks = tasks.filter((task: ITask) => task.title.includes(search) || task.description.includes(search));
+      }
+
+      return tasks;
    }
 
    public getTaskById(id: string): ITask {
