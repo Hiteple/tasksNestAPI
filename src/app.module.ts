@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from 'nestjs-config';
 import { resolve } from 'path';
 import { TasksModule } from './tasks/tasks.module';
+import { AuthModule } from './auth/auth.module';
 import config from './config/typeorm.config';
 
 @Module({
@@ -11,7 +12,8 @@ import config from './config/typeorm.config';
         path: resolve(process.cwd(), 'environments', '.env.development')
      }),
      TasksModule,
-     TypeOrmModule.forRoot(config)
+     TypeOrmModule.forRoot(config),
+     AuthModule
    ]
 })
 export class AppModule {}
