@@ -6,17 +6,18 @@ import { FilterTaskDTO } from './dto/filter-task.dto';
 import { TaskRepository } from './task.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class TasksService {
    constructor(@InjectRepository(TaskRepository) private taskRepository: TaskRepository) {}
 
-   public getTasks(filterTaskDTO: FilterTaskDTO): Promise<Task[]> {
-      return this.taskRepository.getTasks(filterTaskDTO);
+   public getTasks(filterTaskDTO: FilterTaskDTO, user: User): Promise<Task[]> {
+      return this.taskRepository.getTasks(filterTaskDTO, user);
    }
 
-   public async getTaskById(id: number): Promise<Task> {
-      const foundTask = await this.taskRepository.findOne(id);
+   public async getTaskById(id: number, user: User): Promise<Task> {
+      const foundTask = await this.taskRepository.findOne({ where: { id, userId: user.id } });
 
       if (!foundTask) {
          throw new NotFoundException(`Task with ID ${id} not found`);
@@ -25,20 +26,21 @@ export class TasksService {
       return foundTask;
    }
 
-   public createTask(createTaskDTO: CreateTaskDTO): Promise<Task> {
-      return this.taskRepository.createTask(createTaskDTO);
+   public createTask(createTaskDTO: CreateTaskDTO, user: User): Promise<Task> {
+      return this.taskRepository.createTask(createTaskDTO, user);
    }
 
-   public async updateTask(id: number, updateTaskDTO: UpdateTaskDTO): Promise<Task> {
-      const foundTask = await this.getTaskById(id);
+
+   public async updateTask(id: number, updateTaskDTO: UpdateTaskDTO, user: User): Promise<Task> {
+      const foundTask = await this.getTaskById(id, user);
       foundTask.status = updateTaskDTO.status;
       await foundTask.save();
 
       return foundTask;
    }
 
-   public async deleteTask(id: number): Promise<Task> {
-      const foundTask = await this.getTaskById(id);
+   public async deleteTask(id: number, user: User): Promise<Task> {
+      const foundTask = await this.getTaskById(id, user);
 
       if (!foundTask) {
          throw new NotFoundException(`Task with ID ${id} not found`);
