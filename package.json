@@ -30,6 +30,7 @@
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.2",
     "class-validator": "^0.13.1",
+    "config": "^3.3.3",
     "nestjs-config": "^1.4.7",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",

@@ -1,21 +1,17 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
+import * as config from 'config';
 
-const {
-   DB_HOST,
-   DB_PORT,
-   DB_USERNAME,
-   DB_PASSWORD,
-} = process.env;
+const dbConfig = config.get('db');
 
-const config: TypeOrmModuleOptions = {
-   type: 'postgres',
-   host: DB_HOST,
-   port: parseInt(DB_PORT),
-   username: DB_USERNAME,
-   password: DB_PASSWORD,
-   database: 'tasksmanagement',
+const typeOrmConfig: TypeOrmModuleOptions = {
+   type: dbConfig.type,
+   host: process.env.RDS_HOSTNAME || dbConfig.host,
+   port: process.env.RDS_PORT || dbConfig.port,
+   username: process.env.RDS_USERNAME ||dbConfig.username,
+   password: process.env.RDS_PASSWORD ||dbConfig.password,
+   database: process.env.RDS_DATABASE ||dbConfig.database,
    entities: [__dirname + '/../**/*.entity.{js,ts}'],
-   synchronize: false
+   synchronize: process.env.TYPEORM_SYNC || dbConfig.synchronize
 };
 
-export default config;
+export default typeOrmConfig;
