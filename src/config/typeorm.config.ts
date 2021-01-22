@@ -15,7 +15,7 @@ const config: TypeOrmModuleOptions = {
    password: DB_PASSWORD,
    database: 'tasksmanagement',
    entities: [__dirname + '/../**/*.entity.{js,ts}'],
-   synchronize: true
+   synchronize: false
 };
 
 export default config;
