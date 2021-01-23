@@ -1,2 +1,8 @@
+server:
+  origin: http://nestjs-hiteple-frontend.s3-website-sa-east-1.amazonaws.com
+
 db:
   synchronize: false
+
+jwt:
+  secret: TOPSECRETTOKEN
